@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:nobetci_eczane/models/pharmacy.dart';
+import 'package:nobetci_eczane/screens/pharmacy_screen.dart';
 
 class PharmacyMinCardWidget extends StatelessWidget {
   late Pharmacy pharmacy;
@@ -12,7 +13,7 @@ class PharmacyMinCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DistrictScreen(districtName: widget.districtName)));
+        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => PharmacyScreen(pharmacy: pharmacy,)));
       },
       child: Card(
         color: Colors.white,
