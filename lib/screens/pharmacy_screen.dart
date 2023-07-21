@@ -44,69 +44,8 @@ class PharmacyScreen extends StatelessWidget {
                   scrollDirection: Axis.vertical,
                   child: Column(
                     children: [
-                      Card(
-                        color: Colors.white,
-                        shape: _buildCardShape(),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                          child: ListTile(
-                            leading: IconButton(
-                              icon: const Icon(
-                                Icons.location_on,
-                                color: Colors.red,
-                                size: 32,
-                              ),
-                              onPressed: () async {
-                                Uri url = Uri.parse(
-                                    "https://www.google.com/maps/search/?api=1&query=${pharmacy.address}");
-                                try {
-                                  await launchUrl(url);
-                                } on PlatformException catch (e) {
-                                  print(
-                                      "Failed to make phone call: ${e.message}");
-                                }
-                              },
-                            ),
-                            title: Text(
-                              pharmacy.address,
-                              style: const TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Card(
-                        color: Colors.white,
-                        shape: _buildCardShape(),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                          child: ListTile(
-                            leading: IconButton(
-                              icon: const Icon(
-                                Icons.phone,
-                                color: Colors.red,
-                                size: 32,
-                              ),
-                              onPressed: () async {
-                                Uri url = Uri.parse('tel:${pharmacy.number}');
-                                try {
-                                  await launchUrl(url);
-                                } on PlatformException catch (e) {
-                                  print(
-                                      "Failed to make phone call: ${e.message}");
-                                }
-                              },
-                            ),
-                            title: Text(
-                              pharmacy.number,
-                              style: const TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      _buildCard(buildAddressListTile()),
+                      _buildCard(buildNumberListTile()),
                     ],
                   ),
                 ),
@@ -118,9 +57,81 @@ class PharmacyScreen extends StatelessWidget {
     );
   }
 
+  ListTile buildNumberListTile() {
+    return ListTile(
+      leading: IconButton(
+        icon: const Icon(
+          Icons.phone,
+          color: Colors.red,
+          size: 32,
+        ),
+        onPressed: () async {
+          await callTheNumber();
+        },
+      ),
+      title: Text(
+        pharmacy.number,
+        style: const TextStyle(
+          fontSize: 18,
+        ),
+      ),
+    );
+  }
+
+  ListTile buildAddressListTile() {
+    return ListTile(
+      leading: IconButton(
+        icon: const Icon(
+          Icons.location_on,
+          color: Colors.red,
+          size: 32,
+        ),
+        onPressed: () async {
+          await searchOnTheMap();
+        },
+      ),
+      title: Text(
+        pharmacy.address,
+        style: const TextStyle(
+          fontSize: 18,
+        ),
+      ),
+    );
+  }
+
+  Future<void> callTheNumber() async {
+    Uri url = Uri.parse('tel:${pharmacy.number}');
+    try {
+      await launchUrl(url);
+    } on PlatformException catch (e) {
+      print("Failed to make phone call: ${e.message}");
+    }
+  }
+
+  Future<void> searchOnTheMap() async {
+    Uri url = Uri.parse(
+        "https://www.google.com/maps/search/?api=1&query=${pharmacy.address}");
+    try {
+      await launchUrl(url);
+    } on PlatformException catch (e) {
+      print("Failed to make phone call: ${e.message}");
+    }
+  }
+
   RoundedRectangleBorder _buildCardShape() {
     return RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(16),
+    );
+  }
+
+  Card _buildCard(ListTile listTile) {
+    return Card(
+      color: Colors.white,
+      shape: _buildCardShape(),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+        child: listTile,
+      ),
     );
   }
 }
