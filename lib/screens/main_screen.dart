@@ -18,13 +18,13 @@ class _MainScreenState extends State<MainScreen> with MainSetting {
       const Duration(
         seconds: 3,
       ),
-          () {
+      () {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (context) => const HomeScreen(),
           ),
-              (Route<dynamic> route) => false,
+          (Route<dynamic> route) => false,
         );
       },
     );
@@ -68,31 +68,7 @@ class _MainScreenState extends State<MainScreen> with MainSetting {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(5),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                LoadingAnimationWidget.discreteCircle(
-                  color: Colors.white,
-                  secondRingColor: Colors.lightBlueAccent,
-                  thirdRingColor: Colors.lightBlue,
-                  size: 100,
-                ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child:
-                    Image.asset('lib/assets/images/logo_img.png'),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          _buildLogo(),
           const SizedBox(
             height: 0.05,
           ),
@@ -100,9 +76,9 @@ class _MainScreenState extends State<MainScreen> with MainSetting {
             "İstanbul Nöbetçi Eczaneler",
             style: GoogleFonts.ubuntu(
               textStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
           ),
           const SizedBox(
@@ -111,9 +87,34 @@ class _MainScreenState extends State<MainScreen> with MainSetting {
           Text(
             "Lütfen Bekleyiniz...",
             style: GoogleFonts.ubuntu(
-              textStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: Colors.white,
-              ),
+              textStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white,),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding _buildLogo() {
+    return Padding(
+      padding: const EdgeInsets.all(5),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          LoadingAnimationWidget.discreteCircle(
+            color: Colors.white,
+            secondRingColor: Colors.lightBlueAccent,
+            thirdRingColor: Colors.lightBlue,
+            size: 100,
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Image.asset('lib/assets/images/logo_img.png'),
             ),
           ),
         ],
@@ -144,9 +145,7 @@ class _MainScreenState extends State<MainScreen> with MainSetting {
             child: Text(
               "Github: Yunus Emre Kaplan",
               style: GoogleFonts.nunito(
-                textStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  color: Colors.white,
-                ),
+                textStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white,),
               ),
             ),
           ),
