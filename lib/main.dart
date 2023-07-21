@@ -51,9 +51,6 @@ class _MyHomePageState extends State<MyHomePage> {
       PharmacyService.getPharmacyAddresses(district).then((value) => address = value!.first);
       PharmacyService.getPharmacyNumbers(district).then((value) => number = value!.first);
     });
-    print(name);
-    print(address);
-    print(number);
   }
 
   @override

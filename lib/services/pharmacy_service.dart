@@ -21,8 +21,6 @@ class PharmacyService {
       pharmacies.add(Pharmacy(name: names[k], address: addresses[i], number: numbers[i]));
       k += 2;
     }
-    print('Pharmacies');
-    print(pharmacies);
     return pharmacies;
   }
 

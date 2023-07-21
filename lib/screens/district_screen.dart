@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:nobetci_eczane/models/pharmacy.dart';
 import 'package:nobetci_eczane/services/pharmacy_service.dart';
+import 'package:nobetci_eczane/widgets/pharmacy_min_card_widget.dart';
 
 class DistrictScreen extends StatefulWidget {
   late String districtName;
@@ -18,24 +19,33 @@ class _DistrictScreenState extends State<DistrictScreen> {
   List<Pharmacy> pharmacies = [];
 
   late Widget _body;
+  int delayTime = 100;
 
   @override
   void initState() {
     getPharmacies();
+    delayFunction();
+    super.initState();
+  }
+
+  Function? delayFunction() {
     Future.delayed(
-      const Duration(
-        seconds: 2,
+      Duration(
+        milliseconds: delayTime,
       ),
       () {
-        setState(
-          () {
-            _body;
-            print(pharmacies.length);
-          },
-        );
+        if (pharmacies.isEmpty) {
+          return delayFunction();
+        } else {
+          setState(
+            () {
+              _body;
+            },
+          );
+        }
       },
     );
-    super.initState();
+    return null;
   }
 
   @override
@@ -63,7 +73,7 @@ class _DistrictScreenState extends State<DistrictScreen> {
       body: pharmacies.isEmpty
           ? _body
           : Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               child: SizedBox(
                 width: double.infinity,
                 child: Column(
@@ -74,18 +84,10 @@ class _DistrictScreenState extends State<DistrictScreen> {
                       flex: 1,
                       fit: FlexFit.tight,
                       child: SingleChildScrollView(
-                        physics: BouncingScrollPhysics(),
+                        physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.vertical,
                         child: Column(
-                          children: pharmacies.map((e) => Column(
-                            children: [
-                              Text(e.name),
-                              Text(e.address),
-                              Text(e.number),
-                            ],
-                          )).toList(),
-                          //mainAxisSize: MainAxisSize.min,
-                          //children: districts.map((e) => DistrictMinCardWidget(districtName: e,),).toList(),
+                          children: pharmacies.map((e) => PharmacyMinCardWidget(pharmacy: e),).toList(),
                         ),
                       ),
                     ),
@@ -97,9 +99,8 @@ class _DistrictScreenState extends State<DistrictScreen> {
   }
 
   void getPharmacies() async {
-    setState(() {
-      PharmacyService.getPharmacies(widget.districtName).then((value) => pharmacies = value);
-    });
+    PharmacyService.getPharmacies(widget.districtName)
+        .then((value) => pharmacies = value);
   }
 
   Widget _errorLoadingScreen() {
