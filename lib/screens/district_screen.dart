@@ -18,7 +18,9 @@ class DistrictScreen extends StatefulWidget {
 class _DistrictScreenState extends State<DistrictScreen> {
   List<Pharmacy> pharmacies = [];
 
-  late Widget _body;
+  late Widget _loadingBody;
+  late Widget _mainBody;
+
   int delayTime = 100;
 
   @override
@@ -39,7 +41,7 @@ class _DistrictScreenState extends State<DistrictScreen> {
         } else {
           setState(
             () {
-              _body;
+              _loadingBody;
             },
           );
         }
@@ -50,7 +52,8 @@ class _DistrictScreenState extends State<DistrictScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _body = _errorLoadingScreen();
+    _loadingBody = _errorLoadingScreen();
+    _mainBody = _buildMainBody();
 
     return Scaffold(
       appBar: AppBar(
@@ -70,37 +73,38 @@ class _DistrictScreenState extends State<DistrictScreen> {
         ),
       ),
       // ignore: prefer_const_constructors
-      body: pharmacies.isEmpty
-          ? _body
-          : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                width: double.infinity,
+      body: pharmacies.isEmpty ? _loadingBody : _mainBody,
+    );
+  }
+
+  Padding _buildMainBody() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: double.infinity,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Flexible(
+              flex: 1,
+              fit: FlexFit.tight,
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.vertical,
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      fit: FlexFit.tight,
-                      child: SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        child: Column(
-                          children: pharmacies.map((e) => PharmacyMinCardWidget(pharmacy: e),).toList(),
-                        ),
-                      ),
-                    ),
-                  ],
+                  children: pharmacies.map((e) => PharmacyMinCardWidget(pharmacy: e),).toList(),
                 ),
               ),
             ),
+          ],
+        ),
+      ),
     );
   }
 
   void getPharmacies() async {
-    PharmacyService.getPharmacies(widget.districtName)
-        .then((value) => pharmacies = value);
+    await PharmacyService.getPharmacies(widget.districtName).then((value) => pharmacies = value);
   }
 
   Widget _errorLoadingScreen() {
@@ -117,9 +121,9 @@ class _DistrictScreenState extends State<DistrictScreen> {
             "Nöbetçi Eczaneler Yükleniyor...",
             style: GoogleFonts.nunito(
               textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           const SizedBox(
@@ -129,9 +133,9 @@ class _DistrictScreenState extends State<DistrictScreen> {
             "Lütfen Bekleyiniz",
             style: GoogleFonts.nunito(
               textStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.bold,
-                  ),
+                color: Colors.black54,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
